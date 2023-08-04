@@ -1,0 +1,56 @@
+const assert = require('assert');
+const axios = require('axios'); // You'll need to install the axios library
+
+describe('API Test Suite', function() {
+    // Test case for "Get List Users" endpoint
+    it('should fetch a list of users', async function() {
+        const response = await axios.get('/api/users?page=2');
+        assert.strictEqual(response.status, 200);
+        assert.strictEqual(response.data.page, 2);
+        assert.strictEqual(response.data.data.length, 6);
+    });
+
+    // Test case for "Get Single User" endpoint
+    it('should fetch a single user by ID', async function() {
+        const userId = 2;
+        const response = await axios.get(`/api/users/${userId}`);
+        assert.strictEqual(response.status, 200);
+        assert.strictEqual(response.data.data.id, userId);
+    });
+
+    // Test case for "Single User Not Found" endpoint
+    it('should handle a not found single user request', async function() {
+        const userId = 23;
+        try {
+            await axios.get(`/api/users/${userId}`);
+        } catch (error) {
+            assert.strictEqual(error.response.status, 404);
+        }
+    });
+
+    // Test case for "List Resource" endpoint
+    it('should fetch a list of resources', async function() {
+        const response = await axios.get('/api/unknown');
+        assert.strictEqual(response.status, 200);
+        assert.strictEqual(response.data.page, 1);
+        assert.strictEqual(response.data.data.length, 6);
+    });
+
+    // Test case for "Single Resource" endpoint
+    it('should fetch a single resource by ID', async function() {
+        const resourceId = 2;
+        const response = await axios.get(`/api/unknown/${resourceId}`);
+        assert.strictEqual(response.status, 200);
+        assert.strictEqual(response.data.data.id, resourceId);
+    });
+
+    // Test case for "Single Resource Not Found" endpoint
+    it('should handle a not found single resource request', async function() {
+        const resourceId = 23;
+        try {
+            await axios.get(`/api/unknown/${resourceId}`);
+        } catch (error) {
+            assert.strictEqual(error.response.status, 404);
+        }
+    });
+});
