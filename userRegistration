@@ -1,0 +1,69 @@
+const assert = require('assert');
+const axios = require('axios'); // You'll need to install the axios library
+
+describe('API Test Suite', function() {
+    let token = null;
+
+    // Test case for POST - Register Successful
+    it('should successfully register a user', async function() {
+        const requestData = {
+            "email": "eve.holt@reqres.in",
+            "password": "pistol"
+        };
+
+        const response = await axios.post('/api/register', requestData);
+        assert.strictEqual(response.status, 200);
+        assert.ok(response.data.id);
+        assert.ok(response.data.token);
+        token = response.data.token;
+    });
+
+    // Test case for POST - Register Unsuccessful
+    it('should handle unsuccessful registration', async function() {
+        const requestData = {
+            "email": "sydney@fife"
+        };
+
+        try {
+            await axios.post('/api/register', requestData);
+        } catch (error) {
+            assert.strictEqual(error.response.status, 400);
+            assert.strictEqual(error.response.data.error, "Missing password");
+        }
+    });
+
+    // Test case for POST - Login Successful
+    it('should successfully login', async function() {
+        const requestData = {
+            "email": "eve.holt@reqres.in",
+            "password": "cityslicka"
+        };
+
+        const response = await axios.post('/api/login', requestData);
+        assert.strictEqual(response.status, 200);
+        assert.ok(response.data.token);
+        token = response.data.token;
+    });
+
+    // Test case for POST - Login Unsuccessful
+    it('should handle unsuccessful login', async function() {
+        const requestData = {
+            "email": "peter@klaven"
+        };
+
+        try {
+            await axios.post('/api/login', requestData);
+        } catch (error) {
+            assert.strictEqual(error.response.status, 400);
+            assert.strictEqual(error.response.data.error, "Missing password");
+        }
+    });
+
+    // Test case for GET - Delayed Response
+    it('should fetch delayed user response', async function() {
+        const response = await axios.get('/api/users?delay=3');
+        assert.strictEqual(response.status, 200);
+        assert.strictEqual(response.data.page, 1);
+        assert.strictEqual(response.data.data.length, 6);
+    });
+});
