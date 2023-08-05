@@ -1,0 +1,25 @@
+<!-- cypress/mocha-runner.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mocha Test Runner</title>
+    <!-- Include Mocha and Chai -->
+    <script src="https://cdn.jsdelivr.net/npm/mocha@8.2.1/mocha.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chai@4.3.4/chai.js"></script>
+    <script>
+        //  Mocha and Chai Configuration
+        mocha.setup('bdd');
+        const expect = chai.expect;
+
+        // Import Mocha tests
+        import '../e2e/addUsers_api.spec.cy.js';
+        import '../e2e/getDelayedUsers_api.spec.cy.js';
+        import '../e2e/getUsers_api.spec.cy.js';
+        import '../e2e/userRegistration.spec.cy.js';
+        // Run
+        mocha.run();
+    </script>
+</head>
+<body>
+</body>
+</html>
